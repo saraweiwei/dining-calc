@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dining Calculator</title>
+    <style>
+        :root {
+            --bg-color: #ADADAD;
+            --card-bg: #1e1e1e;
+            --text-main: #FFFFFF;
+            --text-dim: #999999;
+            --accent-blue: #4dabf7;
+            --font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            width: 90%;
+            max-width: 400px;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin: 0 0 2rem 0;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-sizing: border-box;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .divider {
+            height: 1px;
+            background: #333;
+            margin: 1.5rem 0;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-weight: bold;
+        }
+
+        .result-label {
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        .result-value {
+            font-size: 1.1rem;
+        }
+
+        .total-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .total-label {
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .total-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--accent-blue);
+            letter-spacing: -1px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Dining Calculator</h2>
+    
+    <div class="input-group">
+        <label>餐點原價 $PRICE</label>
+        <input type="number" id="subtotal" placeholder="0.00" inputmode="decimal">
+    </div>
+
+    <div class="input-group">
+        <label>小費百分比 (Tip %)</label>
+        <input type="number" id="tipPercent" value="18" inputmode="decimal">
+    </div>
+
+    <div class="input-group">
+        <label>稅率 (Tax % - AZ預設 8.6%)</label>
+        <input type="number" id="taxPercent" value="8.6" inputmode="decimal">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="result-row">
+        <span class="result-label">稅金 (Tax)</span>
+        <span class="result-value" id="displayTax">$0.00</span>
+    </div>
+
+    <div class="result-row">
+        <span class="result-label">小費 (Tip)</span>
+        <span class="result-value" id="displayTip">$0.00</span>
+    </div>
+
+    <div class="total-container">
+        <span class="total-label">每人應付總額 (TOTAL)</span>
+        <div class="total-amount" id="displayTotal">$0.00</div>
+    </div>
+</div>
+
+<script>
+    const subtotalIn = document.getElementById('subtotal');
+    const tipIn = document.getElementById('tipPercent');
+    const taxIn = document.getElementById('taxPercent');
+
+    const taxOut = document.getElementById('displayTax');
+    const tipOut = document.getElementById('displayTip');
+    const totalOut = document.getElementById('displayTotal');
+
+    function formatCurrency(num) {
+        return '$' + num.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function calculate() {
+        const s = parseFloat(subtotalIn.value) || 0;
+        const ti = parseFloat(tipIn.value) || 0;
+        const ta = parseFloat(taxIn.value) || 0;
+
+        const taxAmt = s * (ta / 100);
+        const tipAmt = s * (ti / 100);
+        const totalAmt = s + taxAmt + tipAmt;
+
+        taxOut.innerText = formatCurrency(taxAmt);
+        tipOut.innerText = formatCurrency(tipAmt);
+        totalOut.innerText = formatCurrency(totalAmt);
+    }
+
+    // 監聽輸入
+    subtotalIn.addEventListener('input', calculate);
+    tipIn.addEventListener('input', calculate);
+    taxIn.addEventListener('input', calculate);
+</script>
+
+</body>
+</html>
